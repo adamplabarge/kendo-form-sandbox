@@ -11,15 +11,13 @@ import "./App.css";
 function App() {
   const [step, setStep] = useState(0);
   const [formValues, setFormValues] = useState({
-    step_one: {
-        first_name: "",
-        phone: "",
-    },
-     step_two: {
-        first_name: "",
-        phone: "",
-    }
+    first_name_step_one: "",
+    phone_step_one: "",
+    first_name_step_two: "",
+    phone_step_two: "",
   });
+
+  console.log("Form Values Step One:", formValues);
 
   const handleSubmit = (dataItem: any) => {
     alert(JSON.stringify(dataItem, null, 2));
@@ -28,12 +26,18 @@ function App() {
   const copyValues = () => {
     setFormValues((prevValues) => ({
       ...prevValues,
-      step_two: {
-        first_name: prevValues.step_one.first_name,
-        phone: prevValues.step_one.phone,
-      },
+      first_name_step_two: prevValues.first_name_step_one,
+      phone_step_two: prevValues.phone_step_one,
     }));
   }
+
+  const handleOnChange = (event: any) => {
+    const { name, value } = event.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
 
   const steps = ["Step 1", "Step 2"];
 
@@ -50,24 +54,26 @@ function App() {
                 <span>First Name</span>
               </label>
               <Field
-                key="first_name"
-                id="first_name"
-                name="first_name"
+                key="first_name_step_one"
+                id="first_name_step_one"
+                name="first_name_step_one"
                 label="First Name"
-                value={formValues.step_one.first_name}
+                value={formValues.first_name_step_one}
                 component={FormInput}
+                onChange={handleOnChange}
                 required={true}
               />
               <label className="k-form-field">
                 <span className="k-form-field-label">Phone</span>
               </label>
               <Field
-                key="phone"
-                id="phone"
-                name="phone"
+                key="phone_step_one"
+                id="phone_step_one"
+                name="phone_step_one"
                 label="Phone"
-                value={formValues.step_one.phone}
+                value={formValues.phone_step_one}
                 component={FormMaskedTextBox}
+                onChange={handleOnChange}
                 mask="(999) 999-9999"
                 required={true}
               />
@@ -92,29 +98,32 @@ function App() {
           )}
           {step === 1 && (
             <FormElement>
-              <button onClick={copyValues}>Copy Values</button>
+              <button type="button" onClick={copyValues}>Copy Values</button>
+              <br />
               <label>
                 <span>First Name</span>
               </label>
               <Field
-                key="first_name"
-                id="first_name"
-                name="first_name"
+                key="first_name_step_two"
+                id="first_name_step_two"
+                name="first_name_step_two"
                 label="First Name"
-                value={formValues.step_two.first_name}
+                value={formValues.first_name_step_two}
                 component={FormInput}
+                onChange={handleOnChange}
                 required={true}
               />
               <label className="k-form-field">
                 <span className="k-form-field-label">Email</span>
               </label>
               <Field
-                key="phone"
-                id="phone"
-                name="phone"
+                key="phone_step_two"
+                id="phone_step_two"
+                name="phone_step_two"
                 label="Phone"
-                value={formValues.step_two.phone}
+                value={formValues.phone_step_two}
                 component={FormMaskedTextBox}
+                onChange={handleOnChange}
                 mask="(999) 999-9999"
                 required={true}
               />
