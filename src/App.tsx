@@ -60,9 +60,6 @@ function App() {
       onSubmit={handleSubmit}
       render={(formRenderProps) => (
         <>
-        {
-          console.log("Form Values Render Props:", formRenderProps)
-        }
           <Stepper steps={steps} currentStep={step} onStepChange={setStep} />
           {step === 0 && (
             <FormElement>
