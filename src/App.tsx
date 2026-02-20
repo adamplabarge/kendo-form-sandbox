@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Form, Field, FormElement } from "@progress/kendo-react-form";
 import { FormMaskedTextBox } from "./components/FormMaskedTextBox";
 import { FormInput } from "./components/FormInput";
@@ -9,6 +9,9 @@ import "./App.css";
 
 
 function App() {
+
+  const formRenderProps = useRef<any>(null);
+
   const [step, setStep] = useState(0);
   const [formValues, setFormValues] = useState({
     first_name_step_one: "",
@@ -24,11 +27,16 @@ function App() {
   };
 
   const copyValues = () => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      first_name_step_two: prevValues.first_name_step_one,
-      phone_step_two: prevValues.phone_step_one,
-    }));
+    if (formRenderProps.current) {
+      formRenderProps.current.onChange('first_name_step_two', { value: formValues.first_name_step_one });
+      formRenderProps.current.onChange('phone_step_two', { value: formValues.phone_step_one });
+      
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        first_name_step_two: formValues.first_name_step_one,
+        phone_step_two: formValues.phone_step_one,
+      }));
+    }
   }
 
   const handleOnChange = (event: any) => {
@@ -43,10 +51,14 @@ function App() {
 
   return (
     <Form
+      ref={formRenderProps}
       initialValues={formValues}
       onSubmit={handleSubmit}
       render={(formRenderProps) => (
         <>
+        {
+          console.log("Form Values Render Props:", formRenderProps)
+        }
           <Stepper steps={steps} currentStep={step} onStepChange={setStep} />
           {step === 0 && (
             <FormElement>
@@ -98,7 +110,14 @@ function App() {
           )}
           {step === 1 && (
             <FormElement>
-              <button type="button" onClick={copyValues}>Copy Values</button>
+              <button
+                type="button"
+                onClick={() => {
+                  copyValues()
+                }}
+              >
+                Copy Values
+              </button>
               <br />
               <label>
                 <span>First Name</span>
