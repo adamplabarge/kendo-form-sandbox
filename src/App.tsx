@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import type { ChangeEvent } from "react";
 import { Form, Field, FormElement } from "@progress/kendo-react-form";
 import type { FormRenderProps } from "@progress/kendo-react-form";
 import { FormMaskedTextBox } from "./components/FormMaskedTextBox";
@@ -8,11 +9,17 @@ import { Button } from "@progress/kendo-react-buttons";
 import { Stepper } from "./components/Stepper";
 import "./App.css";
 
+type FormValues = {
+  first_name_step_one: string;
+  phone_step_one: string;
+  first_name_step_two: string;
+  phone_step_two: string;
+};
 
 function App() {
 
   const [step, setStep] = useState(0);
-  const [formValues, setFormValues] = useState({
+  const [formValues, setFormValues] = useState<FormValues>({
     first_name_step_one: "",
     phone_step_one: "",
     first_name_step_two: "",
@@ -21,7 +28,7 @@ function App() {
 
   console.log("Form Values:", formValues);
 
-  const handleSubmit = (dataItem: any) => {
+  const handleSubmit = (dataItem: { [name: string]: any }, event?: React.SyntheticEvent) => {
     alert(JSON.stringify(dataItem, null, 2));
   };
 
@@ -37,7 +44,7 @@ function App() {
     }));
   }
 
-  const handleOnChange = (event: any) => {
+  const handleOnChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormValues((prevValues) => ({
       ...prevValues,
